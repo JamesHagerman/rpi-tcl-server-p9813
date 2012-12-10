@@ -1,0 +1,48 @@
+#
+# Makefile:
+# For command line to LED SPI interface app named spi_led_spit
+#
+#################################################################################
+# Compile a piece of C code using the wiringPi library:
+# sudo cc -o fun softPwm.c -I/usr/local/include -L/usr/local/lib -lwiringPi -lpthread
+#################################################################################
+
+#DEBUG	= -g -O0
+DEBUG	= -O3
+CC	= cc
+INCLUDE	= -I/usr/local/include
+CFLAGS	= $(DEBUG) -Wall $(INCLUDE) -Winline -pipe
+
+LDFLAGS	= -L/usr/local/lib
+LIBS    = -lwiringPi
+
+# Should not alter anything below this line
+###############################################################################
+
+SRC	=	spi_led_spit.c
+
+OBJ	=	spi_led_spit.o
+
+BINS	=	spi_led_spit
+
+# all:	
+# 	@echo "    $(BINS)" | fmt
+# 	@echo ""
+
+spi_led_spit:	spi_led_spit.o
+	@echo [link]
+	$(CC) -o $@ spi_led_spit.o $(LDFLAGS) $(LIBS) -lm -lpthread
+
+.c.o:
+	@echo [CC] $<
+	@$(CC) -c $(CFLAGS) $< -o $@
+
+clean:
+	rm -f $(OBJ) *~ spi_led_spit
+
+tags:	$(SRC)
+	@echo [ctags]
+	@ctags $(SRC)
+
+depend:
+	makedepend -Y $(SRC)
