@@ -1,3 +1,6 @@
+/* 
+ * This app was written by James Hagerman. See README.md for more.
+ */ 
 
 #include <stdio.h>
 #include <stdlib.h>
