@@ -10,16 +10,16 @@
 TRANSFER=scp
 REXEC=ssh
 SSHFLAGS=-C # Compress data
-REMOTE=pi@192.168.25.200:~/dev/projects/spi_work/
-FILES=spi_led_spit.ct spi_server.jst Makefile.buildt cJSON.ct cJSON.ht
+REMOTE=pi@192.168.25.200:~/dev/projects/spi_work/v2/
+FILES=socket_server.ct Makefile.buildt
 
 ###############################################################################
 
-SRC	=	spi_led_spit.c
+SRC	=	socket_server.c
 
-OBJ	=	spi_led_spit.o
+OBJ	=	socket_server.o
 
-BINS	=	spi_led_spit
+BINS	=	socket_server
 
 %.ht : %.h
 	$(TRANSFER) $(SSHFLAGS) $< $(REMOTE)
@@ -34,4 +34,4 @@ BINS	=	spi_led_spit
 	$(TRANSFER) $(SSHFLAGS) $< $(REMOTE)
 
 all-done: $(FILES)
-	$(REXEC) $(SSHFLAGS) pi@192.168.25.200 "cd ~/dev/projects/spi_work/ && make"
+	$(REXEC) $(SSHFLAGS) pi@192.168.25.200 "cd ~/dev/projects/spi_work/v2/ && make"

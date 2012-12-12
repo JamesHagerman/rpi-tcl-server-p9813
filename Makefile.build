@@ -19,19 +19,19 @@ LIBS    = -lwiringPi
 # Should not alter anything below this line
 ###############################################################################
 
-SRC	=	spi_led_spit.c
+SRC	=	socket_server.c
 
-OBJ	=	spi_led_spit.o
+OBJ	=	socket_server.o
 
-BINS	=	spi_led_spit
+BINS	=	socket_server
 
 # all:	
 # 	@echo "    $(BINS)" | fmt
 # 	@echo ""
 
-spi_led_spit:	spi_led_spit.o
+socket_server:	socket_server.o
 	@echo [link]
-	$(CC) -o $@ spi_led_spit.o $(LDFLAGS) $(LIBS) -lm -lpthread
+	$(CC) -o $@ socket_server.o $(LDFLAGS) $(LIBS) -lm -lpthread
 
 .c.o:
 	@echo [CC] $<
