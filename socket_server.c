@@ -16,6 +16,8 @@
 #include <wiringPi.h>
 #include <wiringPiSPI.h>
 
+int mode = 0;
+
 uint8_t makeFlag(uint8_t red, uint8_t green, uint8_t blue) {
   uint8_t flag = 0;
 
@@ -28,26 +30,40 @@ uint8_t makeFlag(uint8_t red, uint8_t green, uint8_t blue) {
   return ~flag; // inversion! so 0b0000 0011 goes to 0b1111 1100  =  0xfc
 }
 
-int sendFrame(unsigned char *data) {
-	return wiringPiSPIDataRW(0, data, 4);
+int sendFrame(unsigned char *data, int length) {
+	return wiringPiSPIDataRW(0, data, length);
 }
 
 int sendEmptyFrame() {
 	uint8_t empty_data [4];
-	empty_data[0] = 0;
-	empty_data[1] = 0;
-	empty_data[2] = 0;
-	empty_data[3] = 0;
-	return sendFrame(empty_data);
+	if (mode == 0) {
+		empty_data[0] = 0;
+		empty_data[1] = 0;
+		empty_data[2] = 0;
+		empty_data[3] = 0;
+		return sendFrame(empty_data, 4);
+	} else {
+		empty_data[0] = 0;
+		empty_data[1] = 0;
+		empty_data[2] = 0;
+		return sendFrame(empty_data, 3);
+	}
 }
 
 int sendColor(uint8_t red, uint8_t green, uint8_t blue) {
 	uint8_t color_data [4];
-	color_data[0] = makeFlag(red, green, blue);
-	color_data[1] = blue;
-	color_data[2] = green;
-	color_data[3] = red; // red last!? Yeah, crazy, I know. deal with it.
-	return sendFrame(color_data);
+	if (mode == 0) { // total control lighting is strange
+		color_data[0] = makeFlag(red, green, blue);
+		color_data[1] = blue;
+		color_data[2] = green;
+		color_data[3] = red; // red last!? Yeah, crazy, I know. deal with it.
+		return sendFrame(color_data, 4);
+	} else { // sparkfun strip is sane
+		color_data[0] = red;
+		color_data[1] = green;
+		color_data[2] = blue; 
+		return sendFrame(color_data, 3);
+	}
 }
 
 uint8_t parseRed(char* color) {
@@ -129,10 +145,12 @@ void str_echo(int sockfd) {
 int main (int argc, char* argv[]) {
 	int channel = 0;
 	
-	// if (argc == 1) {
-	// 	printf("No colors given. Exiting... \n");
-	// 	return 1;
-	// }
+	if (argc != 1) {
+		printf("More then one argument given! Switching to sparkfun strip mode... \n");
+		mode = 1;
+	} else {
+		printf("No arguments given. Switching to Total Control Lighting strand mode... \n");
+	}
 	
 	if (wiringPiSetup () == -1) {
 		fprintf (stdout, "oops: %s\n", strerror (errno)) ;
