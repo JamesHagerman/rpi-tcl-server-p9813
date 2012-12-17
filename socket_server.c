@@ -113,7 +113,9 @@ void str_echo(int sockfd) {
 			// parse the colors into an array for the leds (maximum of 1000 leds)
 			
 			//printf("Writing colors to SPI channel 0\n");
-			sendEmptyFrame();
+			if (mode == 0) {
+				sendEmptyFrame();
+			}
 			
 			pch = strtok(buff," \n");
 			while (pch != NULL){
@@ -125,7 +127,9 @@ void str_echo(int sockfd) {
 				pch = strtok(NULL, " \n");
 			}
 			
-			sendEmptyFrame();
+			if (mode == 0) {
+				sendEmptyFrame();
+			}
 			//printf("Colors written\n");
 			
 		} else if (n == 0) {
