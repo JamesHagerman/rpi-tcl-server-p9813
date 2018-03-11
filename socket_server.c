@@ -1,5 +1,5 @@
 /* 
- * This app was written by James Hagerman. See README.md for more.
+ * See README.md for more.
  */ 
 
 #include <stdio.h>

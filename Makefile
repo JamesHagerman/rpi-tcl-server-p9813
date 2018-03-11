@@ -10,8 +10,10 @@
 TRANSFER=scp
 REXEC=ssh
 SSHFLAGS=-C # Compress data
-REMOTE=pi@192.168.25.200:~/dev/projects/spi_work/v2/
-FILES=socket_server.ct Makefile.buildt
+REMOTE_HOST=root@192.168.1.137
+REMOTE_PATH=~/dev/led_server/
+REMOTE=$(REMOTE_HOST):$(REMOTE_PATH)
+FILES=socket_server.ct Makefile.buildt 
 
 ###############################################################################
 
@@ -34,4 +36,4 @@ BINS	=	socket_server
 	$(TRANSFER) $(SSHFLAGS) $< $(REMOTE)
 
 all-done: $(FILES)
-	$(REXEC) $(SSHFLAGS) pi@192.168.25.200 "cd ~/dev/projects/spi_work/v2/ && make"
+	$(REXEC) $(SSHFLAGS) $(REMOTE_HOST) "cd $(REMOTE_PATH) && mv Makefile.build Makefile && make"

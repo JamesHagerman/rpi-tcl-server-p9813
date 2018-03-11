@@ -6,7 +6,7 @@ float angle = 0;
 color the_color;
 
 void setup() {
-  myClient = new Client(this, "192.168.1.137", 3333); 
+  myClient = new Client(this, "192.168.25.169", 3333); 
   
 }
 
@@ -19,7 +19,6 @@ void draw() {
   }
   
   the_color = color(angle/360.0, 1.0, 1.0);
-  //the_color = color(angle/360.0, 1.0, 0.0);
   String color_string = hex(the_color, 6);
   
   for (int i = 0; i < led_count; i += 1) {
@@ -32,3 +31,4 @@ void draw() {
   myClient.write(colors);
   delay(1); 
 }
+
