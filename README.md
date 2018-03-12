@@ -1,5 +1,4 @@
-raspberry_spi_work
-==================
+# Raspberry Pi SPI based RGB LED network server
 
 This app was written by James Hagerman.
 
@@ -16,3 +15,18 @@ Some of the code was also ripped from the Total Control Lighting Arduino TCL lib
 doesn't tell it's customers what chipset is being used in their products, this was the only sure
 way to get the code working correctly.
 
+
+## Build
+
+
+Build on the Pi itself:
+
+```
+make
+```
+
+Transfer all files to the Pi using SCP THEN build on the pi via SSH:
+
+```
+make -f Makefile.scp
+```

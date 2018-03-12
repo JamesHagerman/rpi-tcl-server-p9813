@@ -7,14 +7,16 @@
 # sudo cc -o fun softPwm.c -I/usr/local/include -L/usr/local/lib -lwiringPi -lpthread
 #################################################################################
 
-TRANSFER=scp
-REXEC=ssh
-SSHFLAGS=-C # Compress data
-REMOTE_HOST=root@192.168.1.137
-REMOTE_PATH=~/dev/led_server/
-REMOTE=$(REMOTE_HOST):$(REMOTE_PATH)
-FILES=socket_server.ct Makefile.buildt 
+#DEBUG	= -g -O0
+DEBUG	= -O3
+CC	= cc
+INCLUDE	= -I/usr/local/include
+CFLAGS	= $(DEBUG) -Wall $(INCLUDE) -Winline -pipe
 
+LDFLAGS	= -L/usr/local/lib
+LIBS    = -lwiringPi
+
+# Should not alter anything below this line
 ###############################################################################
 
 SRC	=	socket_server.c
@@ -23,17 +25,24 @@ OBJ	=	socket_server.o
 
 BINS	=	socket_server
 
-%.ht : %.h
-	$(TRANSFER) $(SSHFLAGS) $< $(REMOTE)
+# all:	
+# 	@echo "    $(BINS)" | fmt
+# 	@echo ""
 
-%.ct : %.c
-	$(TRANSFER) $(SSHFLAGS) $< $(REMOTE)
+socket_server:	socket_server.o
+	@echo [link]
+	$(CC) -o $@ socket_server.o $(LDFLAGS) $(LIBS) -lm -lpthread
 
-%.jst : %.js
-	$(TRANSFER) $(SSHFLAGS) $< $(REMOTE)
-	
-%.buildt : %.build
-	$(TRANSFER) $(SSHFLAGS) $< $(REMOTE)
+.c.o:
+	@echo [CC] $<
+	@$(CC) -c $(CFLAGS) $< -o $@
 
-all-done: $(FILES)
-	$(REXEC) $(SSHFLAGS) $(REMOTE_HOST) "cd $(REMOTE_PATH) && mv Makefile.build Makefile && make"
+clean:
+	rm -f $(OBJ) *~ spi_led_spit
+
+tags:	$(SRC)
+	@echo [ctags]
+	@ctags $(SRC)
+
+depend:
+	makedepend -Y $(SRC)
